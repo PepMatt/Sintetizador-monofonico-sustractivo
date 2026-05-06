@@ -1,86 +1,150 @@
-# 🐺 WolfSound's Audio Plugin Template
+# **Sintetizador monofónico sustractivo**
 
-![Cmake workflow success badge](https://github.com/JanWilczek/audio-plugin-template/actions/workflows/cmake.yml/badge.svg)
+---
 
-[**✨FREE JUCE AUDIO PLUGIN DEVELOPMENT COURSE✨**](https://wolfsoundacademy.com/juce?utm_source=github-audio-plugin-template&utm_medium=referral)
 
-> [!IMPORTANT]
-> This is version 2 of the audio-plugin-template, which contains important improvements and updates over version 1. Don't be surprised if the setup doesn't match 1:1 what I have shown in the 2023 YouTube video 😉 Using v2 is even simpler than v1.
+## 1. Descripción
 
-* Want to create an audio plugin (e.g., a VST3 plugin) with C++ but don't know how to go about?
-* Heard about the [JUCE C++ framework](https://github.com/juce-framework/JUCE) but not sure how to start a JUCE project?
-* Want to use CMake with JUCE but don't know how?
-* Want to be able to easily integrate third-party C++ libraries into your project?
-* Want to unit test your audio plugin?
-* Want to ensure the maximum safety of your software?
-* And all this with a click of a button?
+Este proyecto consiste en el desarrollo de un instrumento virtual software capaz de generar sonido mediante síntesis sustractiva, inspirado en la arquitectura clásica del sintetizador analógico Minimoog Model-D.
 
-Well, this template lets you start your JUCE C++ audio plugin project right away with a CMake-based project structure. It involves
+La aplicación se implementará como un plugin de audio compatible con los formatos VST3 y AU, permitiendo su integración en estaciones de trabajo de audio digital (DAW) utilizadas
+por músicos y productores.
 
-* a clear repo structure
-* C++ 23 standard
-* effortless handling of third-party dependencies with the CPM package manager; use the C++ libraries you want together with JUCE
-* highest warning level and "treat warnings as errors"
-* ready-to-go unit test project with GoogleTest
-* integrates with Visual Studio, Visual Studio Code, Xcode, CLion, and NeoVim
+El sistema permitirá recibir mensajes MIDI desde un teclado externo o desde un secuenciador digital, procesar la información de notas y o controladores, generar audio en tiempo real mediante osciladores digitales, filtros resonantes y generadores de envolvente.
 
-Additionally
+El sintetizador incluirá además un sistema de gestión de presets que permitirá almacenar y recuperar configuraciones sonoras mediante una base de datos, posibilitando su sincronización en la nube para facilitar la portabilidad de los sonidos del usuario.
 
-* continuous integration made easy with GitHub Actions: build and run tests on the main branch and on every pull request
-* automatic clang-format of C++ files run on every commit; don't worry about code formatting anymore!
+El proyecto se desarrollará utilizando JUCE, un framework de C++ estándar en la industria del audio, que permite unificar el desarrollo de plugins multiplataforma compilables para diferentes sistemas operativos.
 
-I am personally using this template all the time.
+---
 
-Feel free to propose suggestions 😉
+## 2. Identificación
+- Título del proyecto: Sintetizador monofónico sustractivo
+- Participante: José Mateos Gutiérrez
+- Ciclo formativo: Desarrollo de Aplicaciones Multiplataforma (DAM)
+- Centro educativo: IES Valle del Jerte, Plasencia
 
-## 🔨 Usage
+---
 
-1. This is a template repository, which means you can click "Use this template" on GitHub and create your own repo out of it.
-1. Then, you need to clone the created repo locally. This is typically achieved by running
-    ```bash
-    git clone https://github.com/<YourUsername>/<YourRepoName>.git
-    ```
-    in the terminal. Some people swear by the command line, some by GitHub Desktop, some by Tortoise Git; pick the tool you like.
-1. After cloning your repo locally, change the metadata passed to `juce_add_plugin()` function in the *CMakeLists.txt* file. In particular, change
-    1. `COMPANY_NAME`
-    1. `PLUGIN_MANUFACTURER_CODE`
-    1. `PLUGIN_CODE`
-    1. `PRODUCT_NAME`
-1. After cloning your repo locally, you can proceed with the usual CMake workflow. That involves two steps:
-    1. Configure (buildsystem generation)
-    1. Build (buildystem invocation)
+## 3. Objetivos
 
-    In the main repo directory, execute
+Desarrollo de un instrumento virtual funcional de baja latencia, basado en síntesis
+sustractiva, que permita generar y modificar sonido en tiempo real a partir de eventos MIDI.
+### Objetivos específicos
+1. Generación de sonido:
+   - Implementar tres osciladores digitales (VCO).
+   - Permitir seleccionar diferentes formas de onda:
+      - diente de sierra
+      - pulso
+      - triángulo
+      - senoidal
 
-    ```bash
-    cmake --preset default # configure
-    cmake --build --preset default # build
-    ctest --preset default # test
-    ```
+   - Permitir el ajuste de afinación (detune) y la mezcla de niveles entre osciladores para modificar el timbre final.​
 
-    The first run will take the most time because the dependencies (CPM, JUCE, and googletest) need to be downloaded.
+2. Procesado de señal:
+   - Implementar un filtro paso bajo resonante de 24 dB/octava.
+   - Implementar generadores de envolvente ADSR para:
+      - amplitud
+      - frecuencia de corte del filtro​
+3. Gestión de eventos MIDI:
+   - Interpretar mensajes MIDI de tipo:
+      - Note On / Note Off
+      - Control Change
+      - Pitch Bend.
+   - Permitir controlar parámetros del sintetizador desde un teclado o secuenciador digital.​
+4. Gestión de presets:
+   - Diseñar un sistema de almacenamiento de presets.
+   - Implementar operaciones de:
+      - guardar
+      - cargar
+      - modificar
+5. Integración con base de datos:
+   - Utilizar MongoDB para almacenar configuraciones del sintetizador.
+   - Diseñar un esquema de datos que represente los parámetros sonoros de manera eficiente.​
+6. Despliegue en la nube:
+   - Implementar una base de datos accesible desde Internet mediante Google Cloud, AWS, OracleWebServices u otros.
+   - Permitir la sincronización de presets entre diferentes equipos.
+   - Garantizar la persistencia y seguridad de los datos.​
+7. Desarrollo multiplataforma:
+   - Crear el plugin compatible con Windows, Linux y macOS mediante JUCE.
 
-    Check [*CMakePresets.json*](./CMakePresets.json) for presets other than "default", feel free to add your own, of course!
+---
 
-4. (Optional) To run clang-format on every commit, in the main directory, execute
+## 4. Justificación
+El proyecto se clasifica dentro de los proyectos de innovación aplicada, al consistir en el desarrollo de un producto software tecnológico funcional.
 
-    ```bash
-    pre-commit install
-    ```
+Este proyecto concurre con el currículo de Desarrollo de Aplicaciones Multiplataforma ya que integra múltiples modulos del ciclo:
 
-    (for this, you need to have `pre-commit` installed, e.g., with `pip`: `pip install pre-commit`).
+- Programación (C++).
+- ACDAT (gestión de bases de datos)
+- LMSGI ( git y control de versiones)
+- Desarrollo de interfaces (Implementación y desarrollo de la interfaz gráfica).
+- PSP (Implementación de procesamiento de audio en tiempo real mediante hilos y buffers de JUCE)​.
 
-## 🧱 How was this template built?
+Por tanto, este proyecto permitirá aplicar conocimientos adquiridos durante el ciclo formativo
+en un contexto práctico, desarrollando una aplicación real orientada al ámbito de la
+producción musical digital.
 
-See how I created v1 of this template step by step in this video:
+---
 
-[![Audio plugin template tutorial video](http://img.youtube.com/vi/Uq7Hwt18s3s/0.jpg)](https://www.youtube.com/watch?v=Uq7Hwt18s3s "Audio plugin template tutorial video")
+## 5. Aspectos principales del proyecto:
+El desarrollo del proyecto se estructurará en los siguientes módulos funcionales:
 
-## 📃 License
+1. Motor de síntesis:
+   Implementación del núcleo del sintetizador encargado de generar el audio digital en tiempo
+   real. Este módulo incluirá:
+   - osciladores digitales
+   - mezclador de señal
+   - generadores de envolvente
+   - filtro resonante.​
+2. Procesamiento de audio en tiempo real:
+   Implementación del sistema de procesamiento de audio utilizando las herramientas del
+   framework JUCE, gestionando buffers de audio y garantizando baja latencia.
+3. Sistema de control MIDI:
+   Implementación del módulo encargado de interpretar eventos MIDI y transformarlos en
+   cambios de parámetros dentro del sintetizador.
+4. Interfaz gráfica de usuario:
+   - Desarrollo de una interfaz visual que permita al usuario modificar parámetros como:
+     -volumen de osciladores
+      - frecuencia de corte del filtro
+      - resonancia
+      - parámetros de envolvente.
+      - Forma de onda por oscilador.​
+5. Sistema de gestión de presets:
+   - Diseño e implementación de un sistema que permita almacenar configuraciones sonoras en
+     una base de datos.
+6. Integración con base de datos:
+   - Diseño del modelo de datos en MongoDB para almacenar presets y gestión de las
+     operaciones CRUD necesarias.
+7. Integración con servicios cloud:
+   - Despliegue de la base de datos en un proveedor cloud para permitir el acceso remoto a los
+     presets.
+8. Control de versiones:
+   - Uso de Git y GitHub para gestionar el desarrollo del proyecto, control de versiones y mantener un historial de cambios.
 
-This template repo uses the [Unlicense license](./LICENSE.md) so that you don't have to worry about giving me credit.
+---
 
-If you found the repo helpful, please consider [buying me a coffee](https://buymeacoffee.com/janwilczek).
+## 6. Medios a utilizar:
+- Lenguaje de programación:
+   - C++ (17/21)​
+- Framework de desarrollo:
+   - JUCE (para desarrollo de plugins de audio y procesamiento digital de señal)​
+- Entornos de desarrollo:
+   - VSCodium
+   - CLion​
+- Testing y pruebas:
+   - Bitwig Studio (DAW)
+   - CLion Debugger​
+- Base de datos:
+   - MongoDB
+- Servicios cloud:
+   - Google Cloud o AWS
+- Control de versiones:
+   - Git
+   - GitHub
 
-Remember that CPM, JUCE, and GoogleTest are separately licensed.
+---
 
+## 7. Diagrama:
+
+![alt text](https://files.soniccdn.com/imagecache/fd1/6818fa7d6cd40f3f95bed368f9fae-4685833.jpg "Diagrama de flujo del Behringer Model-D")
