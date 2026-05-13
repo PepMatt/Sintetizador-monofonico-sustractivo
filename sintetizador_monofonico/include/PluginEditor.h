@@ -1,6 +1,6 @@
 #pragma once
 
-namespace audio_plugin {
+namespace sintetizador_monofonico {
 class PluginEditor : public juce::AudioProcessorEditor {
 public:
   explicit PluginEditor(PluginProcessor&);

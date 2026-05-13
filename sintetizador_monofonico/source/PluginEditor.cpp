@@ -1,4 +1,4 @@
-namespace audio_plugin {
+namespace sintetizador_monofonico {
 PluginEditor::PluginEditor(PluginProcessor& p)
     : AudioProcessorEditor(&p), processorRef(p) {
   juce::ignoreUnused(processorRef);
