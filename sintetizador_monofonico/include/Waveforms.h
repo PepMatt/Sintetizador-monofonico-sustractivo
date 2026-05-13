@@ -1,7 +1,7 @@
 #pragma once
 
 namespace sintetizador_monofonico {
-class Waveform {
+class Waveforms {
 public:
   enum class WaveformType {
     sine,

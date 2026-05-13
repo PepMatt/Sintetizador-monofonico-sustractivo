@@ -150,8 +150,11 @@ target_compile_options(sintetizador_monofonico INTERFACE "${PROJECT_WARNINGS_CXX
 # We need to link the plugin targets with the module containing our code.
 target_link_libraries(
   AudioPlugin
-  PRIVATE my_company::sintetizador_monofonico
-  PUBLIC juce::juce_recommended_config_flags juce::juce_recommended_lto_flags juce::juce_recommended_warning_flags
+  PRIVATE
+        my_company::sintetizador_monofonico
+        juce::juce_audio_processors
+        juce::juce_dsp
+        PUBLIC juce::juce_recommended_config_flags juce::juce_recommended_lto_flags juce::juce_recommended_warning_flags
 )
 
 # This command allows running tests from the "build" folder (the one where CMake generates the project to).

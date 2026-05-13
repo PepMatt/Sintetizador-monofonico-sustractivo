@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace sintetizador_monofonico {
 class PluginProcessor : public juce::AudioProcessor {
 public:
@@ -34,5 +35,7 @@ public:
 
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
+  Sintetizador sintetizador;
+
 };
 }  // namespace audio_plugin
