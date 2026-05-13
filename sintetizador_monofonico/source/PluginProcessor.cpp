@@ -113,6 +113,9 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
 
   juce::ScopedNoDenormals noDenormals;
 
+  sintetizador.
+
+
   sintetizador.process(buffer, midiMessages) ;
 
 }

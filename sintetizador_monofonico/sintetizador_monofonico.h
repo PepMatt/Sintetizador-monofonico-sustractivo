@@ -35,9 +35,12 @@ END_JUCE_MODULE_DECLARATION
 #include <array>
 #include <cmath>
 
+
+
 #include "include/Sintetizador.h"
 #include "include/Waveforms.h"
 #include  "include/Parameters.h"
+
 
 #include "include/PluginProcessor.h"
 #include "include/PluginEditor.h"

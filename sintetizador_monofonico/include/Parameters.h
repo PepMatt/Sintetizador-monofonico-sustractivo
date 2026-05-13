@@ -1,23 +1,29 @@
 #pragma once
 
 namespace sintetizador_monofonico {
-class Parameters {
-public:
-  float cutoff = 2000.f;
-  float resonance = 0.5f;
+struct Parameters
+{
+  explicit Parameters(juce::AudioProcessor&);
 
-  float attack = 0.01f;
-  float decay = 0.2f;
-  float sustain = 0.8f;
-  float release = 0.3f;
+  // ===== OSC =====
+  juce::AudioParameterChoice& waveform;
 
-  float masterGain = 0.8f;
+  // ===== UNISON =====
+  juce::AudioParameterInt& unisonVoices;
+  juce::AudioParameterFloat& detune;
+  juce::AudioParameterFloat& stereoSpread;
 
-  // UNISON
-  int unisonVoices = 3;
-  float detune = 0.1f;   // en semitonos o ratio
-  float spread = 0.2f;   // estéreo
+  // ===== AMP =====
+  juce::AudioParameterFloat& gainDB;
+
+  // ===== ADSR =====
+  juce::AudioParameterFloat& attack;
+  juce::AudioParameterFloat& decay;
+  juce::AudioParameterFloat& sustain;
+  juce::AudioParameterFloat& release;
+
+  JUCE_DECLARE_NON_COPYABLE(Parameters)
+  JUCE_DECLARE_NON_MOVEABLE(Parameters)
 };
 
-
-}
+} // namespace sintetizador_monofonico
