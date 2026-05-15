@@ -11,6 +11,9 @@ class Sintetizador {
     saw = 2 ,
   };
 
+  void setGain(float gain) {
+    targetGain = juce::Decibels::decibelsToGain(gain);
+  }
 
   void prepare(
         double sampleRate,
@@ -52,6 +55,7 @@ class Sintetizador {
         juce::MidiBuffer& midiMessages) noexcept
   {
     buffer.clear();
+    const auto numSamples = buffer.getNumSamples();
 
     updateWaveform();
 
@@ -97,6 +101,9 @@ class Sintetizador {
         rightChannel[sample] = oscSample;
       }
     }
+      buffer.applyGainRamp(0,numSamples,currentGain,targetGain );
+
+    currentGain = targetGain;
   }
   void reset() noexcept
   {
@@ -111,8 +118,17 @@ class Sintetizador {
   {
     waveformToSet = waveform;
   }
+// *********************************************************
 
 private:
+  float targetAttack;
+  float targetDecay;
+  float targetSustain;
+  float targetRelease;
+  float targetGain = 0;
+
+  float currentGain = 0;
+
   float getNextOscValue() {
     return osc[juce::toUnderlyingType(currentWaveform)].processSample(0.f);
   }

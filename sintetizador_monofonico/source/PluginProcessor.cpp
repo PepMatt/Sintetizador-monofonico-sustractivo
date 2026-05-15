@@ -113,7 +113,7 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
 
   juce::ScopedNoDenormals noDenormals;
 
-  sintetizador.
+  sintetizador.setGain(parameters.gainDB.get());
 
 
   sintetizador.process(buffer, midiMessages) ;
@@ -125,7 +125,8 @@ bool PluginProcessor::hasEditor() const {
 }
 
 juce::AudioProcessorEditor* PluginProcessor::createEditor() {
-  return new PluginEditor(*this);
+  // return new PluginEditor(*this);
+  return new juce::GenericAudioProcessorEditor(*this);
 }
 
 void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {

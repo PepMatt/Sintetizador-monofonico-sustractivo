@@ -72,7 +72,7 @@ namespace
         auto param = std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"amp.gain", versionHint},
             "Gain",
-            juce::NormalisableRange{-60.f, 12.f, 0.1f},
+            juce::NormalisableRange{-60.f, 12.f, 0.1f,1.f},
             0.f,
             juce::AudioParameterFloatAttributes{}.withLabel("dB"));
 
