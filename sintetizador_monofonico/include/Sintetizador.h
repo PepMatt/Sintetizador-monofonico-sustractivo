@@ -26,6 +26,18 @@ public:
                            float decay,
                            float sustain,
                            float release);
+  void setOscParameters(int osc1Wave,
+                        int osc2Wave,
+                        int osc3Wave,
+                        int osc1Oct,
+                        int osc2Oct,
+                        int osc3Oct,
+                        float osc2Detune,
+                        float osc3Detune);
+  void setFilterParameters(float cutoff,
+                         float resonance,
+                         float drive,
+                         int mode);
 
 private:
 

@@ -6,6 +6,7 @@
 #include "source/Waveforms.cpp"
 #include  "source/MiniMoogVoice.cpp"
 #include "source/Sintetizador.cpp"
+#include "source/ParameterLayoutBuilder.cpp"
 
 
 // #include all additional .cpp files below

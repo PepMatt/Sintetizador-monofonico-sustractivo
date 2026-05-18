@@ -1,116 +1,63 @@
 #pragma once
 
-namespace sintetizador_monofonico
+
+namespace sintetizador_monofonico {
+
+Parameters::Parameters(
+    juce::AudioProcessorValueTreeState& apvts)
 {
+  // FILTER
+  filterCutoff =
+      apvts.getRawParameterValue("FILTER_CUTOFF");
 
-namespace
-{
-    auto& addParameter(juce::AudioProcessor& processor, auto parameter)
-    {
-        auto& ref = *parameter;
-        processor.addParameter(parameter.release());
-        return ref;
-    }
+  filterResonance =
+      apvts.getRawParameterValue("FILTER_RESONANCE");
 
-    juce::AudioParameterChoice& createWaveform(juce::AudioProcessor& processor)
-    {
-        constexpr auto versionHint = 1;
+  filterDrive =
+      apvts.getRawParameterValue("FILTER_DRIVE");
 
-        auto param = std::make_unique<juce::AudioParameterChoice>(
-            juce::ParameterID{"osc.waveform", versionHint},
-            "Waveform",
-            juce::StringArray{"Sine", "Triangle", "Saw"},
-            0);
+  filterMode =
+      apvts.getRawParameterValue("FILTER_MODE");
 
-        return addParameter(processor, std::move(param));
-    }
+  // DETUNE
+  osc2Detune =
+      apvts.getRawParameterValue("OSC2_DETUNE");
 
-    juce::AudioParameterInt& createUnisonVoices(juce::AudioProcessor& processor)
-    {
-        constexpr auto versionHint = 1;
+  osc3Detune =
+      apvts.getRawParameterValue("OSC3_DETUNE");
 
-        auto param = std::make_unique<juce::AudioParameterInt>(
-            juce::ParameterID{"unison.voices", versionHint},
-            "Unison Voices",
-            1,
-            8,
-            3);
+  // WAVES
+  osc1Wave =
+      apvts.getRawParameterValue("OSC1_WAVE");
 
-        return addParameter(processor, std::move(param));
-    }
+  osc2Wave =
+      apvts.getRawParameterValue("OSC2_WAVE");
 
-    juce::AudioParameterFloat& createDetune(juce::AudioProcessor& processor)
-    {
-        constexpr auto versionHint = 1;
+  osc3Wave =
+      apvts.getRawParameterValue("OSC3_WAVE");
 
-        auto param = std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID{"unison.detune", versionHint},
-            "Detune",
-            juce::NormalisableRange{0.0f, 1.0f, 0.001f},
-            0.1f);
+  // OCTAVES
+  osc1Oct =
+      apvts.getRawParameterValue("OSC1_OCT");
 
-        return addParameter(processor, std::move(param));
-    }
+  osc2Oct =
+      apvts.getRawParameterValue("OSC2_OCT");
 
-    juce::AudioParameterFloat& createStereoSpread(juce::AudioProcessor& processor)
-    {
-        constexpr auto versionHint = 1;
+  osc3Oct =
+      apvts.getRawParameterValue("OSC3_OCT");
 
-        auto param = std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID{"unison.spread", versionHint},
-            "Stereo Spread",
-            juce::NormalisableRange{0.0f, 1.0f, 0.001f},
-            0.2f);
+  // ADSR
+  attack =
+      apvts.getRawParameterValue("ATTACK");
 
-        return addParameter(processor, std::move(param));
-    }
+  decay =
+      apvts.getRawParameterValue("DECAY");
 
-    juce::AudioParameterFloat& createGain(juce::AudioProcessor& processor)
-    {
-        constexpr auto versionHint = 1;
+  sustain =
+      apvts.getRawParameterValue("SUSTAIN");
 
-        auto param = std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID{"amp.gain", versionHint},
-            "Gain",
-            juce::NormalisableRange{-60.f, 0.0f, 0.1f,1.f},
-            -10.f,
-            juce::AudioParameterFloatAttributes{}.withLabel("dB"));
-
-        return addParameter(processor, std::move(param));
-    }
-
-    juce::AudioParameterFloat& createADSR(
-        juce::AudioProcessor& processor,
-        const juce::String& id,
-        const juce::String& name,
-        float defaultValue,
-        float min,
-        float max)
-    {
-        constexpr auto versionHint = 1;
-
-        auto param = std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID{id, versionHint},
-            name,
-            juce::NormalisableRange{min, max, 0.001f},
-            defaultValue);
-
-        return addParameter(processor, std::move(param));
-    }
+  release =
+      apvts.getRawParameterValue("RELEASE");
 }
 
-Parameters::Parameters(juce::AudioProcessor& processor)
-    : waveform{createWaveform(processor)},
-      unisonVoices{createUnisonVoices(processor)},
-      detune{createDetune(processor)},
-      stereoSpread{createStereoSpread(processor)},
-      gainDB{createGain(processor)},
-
-      attack{createADSR(processor, "env.attack", "Attack", 0.01f, 0.001f, 20.f)},
-      decay{createADSR(processor, "env.decay", "Decay", 0.2f, 0.001f, 10.f)},
-      sustain{createADSR(processor, "env.sustain", "Sustain", 0.8f, 0.f, 1.f)},
-      release{createADSR(processor, "env.release", "Release", 0.3f, 0.001f, 20.f)}
-{
 }
-
-} // namespace sintetizador_monofonico

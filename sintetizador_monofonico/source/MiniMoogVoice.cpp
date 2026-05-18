@@ -77,4 +77,25 @@ void MiniMoogVoice::setEnvelopeParameters(float attack,
                                      sustain,
                                      release);
 }
+void MiniMoogVoice::setOscParameters(int osc1Wave,
+                                     int osc2Wave,
+                                     int osc3Wave,
+                                     int osc1Oct,
+                                     int osc2Oct,
+                                     int osc3Oct,
+                                     float osc2Detune,
+                                     float osc3Detune)
+{
+  sintetizador.setOscParameters(
+      osc1Wave, osc2Wave, osc3Wave,
+      osc1Oct, osc2Oct, osc3Oct,
+      osc2Detune, osc3Detune);
+}
+void MiniMoogVoice::setFilterParameters(float cutoff,
+                                        float resonance,
+                                        float drive,
+                                        int mode)
+{
+  sintetizador.setFilterParameters(cutoff, resonance, drive, mode);
+}
 } // namespace sintetizador_monofonico

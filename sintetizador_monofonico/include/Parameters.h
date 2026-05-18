@@ -1,26 +1,47 @@
 #pragma once
 
 namespace sintetizador_monofonico {
+
 struct Parameters
 {
-  explicit Parameters(juce::AudioProcessor&);
+  explicit Parameters(
+      juce::AudioProcessorValueTreeState& apvts);
 
-  // ===== OSC =====
-  juce::AudioParameterChoice& waveform;
+  // =========================================
+  // FILTER
+  // =========================================
+  std::atomic<float>* filterCutoff = nullptr;
+  std::atomic<float>* filterResonance = nullptr;
+  std::atomic<float>* filterDrive = nullptr;
+  std::atomic<float>* filterMode = nullptr;
 
-  // ===== UNISON =====
-  juce::AudioParameterInt& unisonVoices;
-  juce::AudioParameterFloat& detune;
-  juce::AudioParameterFloat& stereoSpread;
+  // =========================================
+  // DETUNE
+  // =========================================
+  std::atomic<float>* osc2Detune = nullptr;
+  std::atomic<float>* osc3Detune = nullptr;
 
-  // ===== AMP =====
-  juce::AudioParameterFloat& gainDB;
+  // =========================================
+  // WAVEFORMS
+  // =========================================
+  std::atomic<float>* osc1Wave = nullptr;
+  std::atomic<float>* osc2Wave = nullptr;
+  std::atomic<float>* osc3Wave = nullptr;
 
-  // ===== ADSR =====
-  juce::AudioParameterFloat& attack;
-  juce::AudioParameterFloat& decay;
-  juce::AudioParameterFloat& sustain;
-  juce::AudioParameterFloat& release;
+  // =========================================
+  // OCTAVES
+  // =========================================
+  std::atomic<float>* osc1Oct = nullptr;
+  std::atomic<float>* osc2Oct = nullptr;
+  std::atomic<float>* osc3Oct = nullptr;
+
+  // =========================================
+  // ADSR
+  // =========================================
+  std::atomic<float>* attack = nullptr;
+  std::atomic<float>* decay = nullptr;
+  std::atomic<float>* sustain = nullptr;
+  std::atomic<float>* release = nullptr;
 
   JUCE_DECLARE_NON_COPYABLE(Parameters)
   JUCE_DECLARE_NON_MOVEABLE(Parameters)

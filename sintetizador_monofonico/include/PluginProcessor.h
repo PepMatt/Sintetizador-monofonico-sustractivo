@@ -12,6 +12,7 @@ class PluginProcessor : public juce::AudioProcessor
 public:
   // Objeto APVTS que gestiona el estado global
   juce::AudioProcessorValueTreeState apvts;
+  Parameters parameters;
 
  PluginProcessor();
 
@@ -47,6 +48,7 @@ public:
 private:
 
   juce::Synthesiser synth;
+
 
   static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 

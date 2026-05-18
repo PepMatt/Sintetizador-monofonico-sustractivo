@@ -43,6 +43,8 @@ END_JUCE_MODULE_DECLARATION
 #include "include/Envelope.h"
 #include "include/LadderFilter.h"
 #include "include/OscMixer.h"
+#include "include/ParameterLayoutBuilder.h"
+
 
 #include "include/Sintetizador.h"
 
