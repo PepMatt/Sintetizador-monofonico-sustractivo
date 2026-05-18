@@ -44,10 +44,15 @@ public:
                          float resonance,
                          float drive,
                          int mode);
+  void setGlide(float v);
 private:
 
+  juce::SmoothedValue<float> smoothedFrequency;
   Sintetizador sintetizador;
   float currentFrequency = 440.f;
+  float targetFrequency = 440.f;
+  float glideTimeSeconds = 0.5f;
+  float currentGlideTime = -1.f;
 };
 
 } // namespace sintetizador_monofonico

@@ -18,7 +18,7 @@ public:
   void noteOn();
   void noteOff();
 
-  float processSample();
+  float processSample(float frequency);
 
   bool isActive() const;
 

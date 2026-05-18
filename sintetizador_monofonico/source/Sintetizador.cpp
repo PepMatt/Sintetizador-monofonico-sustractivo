@@ -46,8 +46,10 @@ void Sintetizador::noteOff()
 // =========================================
 // AUDIO RENDER
 // =========================================
-float Sintetizador::processSample()
+float Sintetizador::processSample(float frequency)
 {
+  waveforms.setFrequency(frequency);
+
   OscMixer::OscillatorState osc1 { waveforms.processOsc1(), 1.f, true };
   OscMixer::OscillatorState osc2 { waveforms.processOsc2(), 1.f, true };
   OscMixer::OscillatorState osc3 { waveforms.processOsc3(), 1.f, true };

@@ -6,6 +6,12 @@ namespace sintetizador_monofonico {
 Parameters::Parameters(
     juce::AudioProcessorValueTreeState& apvts)
 {
+  //GLIDE
+  glide =
+    apvts.getRawParameterValue("GLIDE");
+  //GAIN
+  masterGain =
+    apvts.getRawParameterValue("MASTER_GAIN");
   // FILTER
   filterCutoff =
       apvts.getRawParameterValue("FILTER_CUTOFF");

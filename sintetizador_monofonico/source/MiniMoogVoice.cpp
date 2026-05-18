@@ -8,6 +8,9 @@ namespace sintetizador_monofonico {
 void MiniMoogVoice::prepare(double sampleRate, int samplesPerBlock)
 {
   sintetizador.prepare(sampleRate, samplesPerBlock);
+
+  smoothedFrequency.reset(sampleRate, 0.05); // default 50ms glide
+  smoothedFrequency.setCurrentAndTargetValue(440.f);
 }
 
 // =========================================
@@ -28,9 +31,11 @@ void MiniMoogVoice::startNote(int midiNoteNumber,
 {
   juce::ignoreUnused(velocity);
 
-  currentFrequency = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
+  const float freq =
+       juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
 
-  sintetizador.setFrequency(currentFrequency);
+  smoothedFrequency.setTargetValue(freq);
+
   sintetizador.noteOn();
 }
 
@@ -57,13 +62,16 @@ void MiniMoogVoice::renderNextBlock(juce::AudioBuffer<float>& buffer,
 
   for (int i = 0; i < numSamples; ++i)
   {
-    const float sample = sintetizador.processSample();
+    const float freq = smoothedFrequency.getNextValue();
+
+    sintetizador.setFrequency(freq);
+
+    const float sample = sintetizador.processSample(freq);
 
     for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
       buffer.addSample(ch, startSample + i, sample);
   }
 
-  // seguridad extra (tu synth decide si sigue vivo)
   if (!sintetizador.isActive())
     clearCurrentNote();
 }
@@ -97,5 +105,17 @@ void MiniMoogVoice::setFilterParameters(float cutoff,
                                         int mode)
 {
   sintetizador.setFilterParameters(cutoff, resonance, drive, mode);
+}
+void MiniMoogVoice::setGlide(float glideTimeSeconds)
+{
+  if (currentGlideTime == glideTimeSeconds)
+    return;
+
+  currentGlideTime = glideTimeSeconds;
+
+  smoothedFrequency.reset(
+      getSampleRate(),
+      glideTimeSeconds
+  );
 }
 } // namespace sintetizador_monofonico

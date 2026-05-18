@@ -43,6 +43,15 @@ struct Parameters
   std::atomic<float>* sustain = nullptr;
   std::atomic<float>* release = nullptr;
 
+  // =========================================
+  // GAIN
+  // =========================================
+  std::atomic<float>* masterGain = nullptr;
+  // =========================================
+  // GLIDE
+  // =========================================
+  std::atomic<float>* glide = nullptr;
+
   JUCE_DECLARE_NON_COPYABLE(Parameters)
   JUCE_DECLARE_NON_MOVEABLE(Parameters)
 };

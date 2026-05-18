@@ -11,7 +11,11 @@ PluginProcessor::PluginProcessor()
         ParameterLayoutBuilder::create()),
   parameters(apvts)
 {
+  synth.clearVoices();
+
   synth.addVoice(new MiniMoogVoice());
+
+  synth.clearSounds();
   synth.addSound(new MiniMoogSound());
 }
 
@@ -42,9 +46,17 @@ void PluginProcessor::processBlock(
     buffer.clear(ch, 0, buffer.getNumSamples());
   }
 
+  const auto gainDB =
+    parameters.masterGain->load();
+
+  const auto glide =
+    parameters.glide->load();
+
+
   const auto cutoff  = parameters.filterCutoff->load();
   const auto res     = parameters.filterResonance->load();
-  const auto drive   = parameters.filterDrive->load();
+  const auto drive =
+    36.f - parameters.filterDrive->load();
   const auto mode    = parameters.filterMode->load();
 
   const auto osc2Detune = parameters.osc2Detune->load();
@@ -89,6 +101,8 @@ void PluginProcessor::processBlock(
           decay,
           sustain,
           release);
+    voice->setGlide(glide);
+
     }
   }
 
@@ -97,6 +111,8 @@ void PluginProcessor::processBlock(
       midi,
       0,
       buffer.getNumSamples());
+  buffer.applyGain(
+    juce::Decibels::decibelsToGain(gainDB));
 }
 
 bool PluginProcessor::hasEditor() const
