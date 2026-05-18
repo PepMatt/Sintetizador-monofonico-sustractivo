@@ -1,151 +1,125 @@
 #pragma once
 
 
+
 namespace sintetizador_monofonico {
+
 PluginProcessor::PluginProcessor()
-    : AudioProcessor(
-          BusesProperties()
-#if !JUCE_IS_MIDI_EFFECT
-#if !JUCE_IS_SYNTH
-              .withInput("Input", juce::AudioChannelSet::stereo(), true)
-#endif
-              .withOutput("Output", juce::AudioChannelSet::stereo(), true)
-#endif
-      ) {
+:
+  apvts(*this,
+        nullptr,
+        "PARAMETERS",
+        createParameters())
+{
+  // Polifonia de 8 voces
+  // for (int i = 0; i < 8; ++i)
+    synth.addVoice(new MiniMoogVoice());
+
+  synth.addSound(new MiniMoogSound());
 }
 
-const juce::String PluginProcessor::getName() const {
-  return JUCE_PLUGIN_NAME;
+void PluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+{
+  synth.setCurrentPlaybackSampleRate(sampleRate);
+
+  for (int i = 0; i < synth.getNumVoices(); ++i)
+    if (auto* v = dynamic_cast<MiniMoogVoice*>(synth.getVoice(i)))
+      v->prepare(sampleRate, samplesPerBlock);
 }
 
-bool PluginProcessor::acceptsMidi() const {
-#if JUCE_NEEDS_MIDI_INPUT
-  return true;
-#else
-  return false;
-#endif
-}
-
-bool PluginProcessor::producesMidi() const {
-#if JUCE_NEEDS_MIDI_OUTPUT
-  return true;
-#else
-  return false;
-#endif
-}
-
-bool PluginProcessor::isMidiEffect() const {
-#if JUCE_IS_MIDI_EFFECT
-  return true;
-#else
-  return false;
-#endif
-}
-
-double PluginProcessor::getTailLengthSeconds() const {
-  return 0.0;
-}
-
-int PluginProcessor::getNumPrograms() {
-  return 1;  // NB: some hosts don't cope very well if you tell them there are 0
-  // programs, so this should be at least 1, even if you're not
-  // really implementing programs.
-}
-
-int PluginProcessor::getCurrentProgram() {
-  return 0;
-}
-
-void PluginProcessor::setCurrentProgram(int index) {
-  juce::ignoreUnused(index);
-}
-
-const juce::String PluginProcessor::getProgramName(int index) {
-  juce::ignoreUnused(index);
-  return {};
-}
-
-void PluginProcessor::changeProgramName(int index,
-                                        const juce::String& newName) {
-  juce::ignoreUnused(index, newName);
-}
-
-void PluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
-  // Use this method as the place to do any pre-playback
-  // initialisation that you need..
-  // juce::ignoreUnused(sampleRate, samplesPerBlock);
-
-  sintetizador.prepare(sampleRate,samplesPerBlock,getTotalNumOutputChannels());
-}
-
-void PluginProcessor::releaseResources() {
-  // When playback stops, you can use this as an opportunity to free up any
-  // spare memory, etc.
-  sintetizador.reset();
-}
-
-bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
-#if JUCE_IS_MIDI_EFFECT
-  juce::ignoreUnused(layouts);
-  return true;
-#else
-  // This is the place where you check if the layout is supported.
-  // In this template code we only support mono or stereo.
-  // Some plugin hosts, such as certain GarageBand versions, will only
-  // load plugins that support stereo bus layouts.
-  if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono() &&
-      layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
-    return false;
-
-  // This checks if the input layout matches the output layout
-#if !JUCE_IS_SYNTH
-  if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-    return false;
-#endif
-
-  return true;
-#endif
+void PluginProcessor::releaseResources()
+{
 }
 
 void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
-                                   juce::MidiBuffer& midiMessages) {
-  juce::ignoreUnused(midiMessages);
-
+                                   juce::MidiBuffer& midi)
+{
   juce::ScopedNoDenormals noDenormals;
 
-  sintetizador.setGain(parameters.gainDB.get());
+  for (int ch = getTotalNumInputChannels();
+       ch < getTotalNumOutputChannels(); ++ch) {
+    buffer.clear(ch, 0, buffer.getNumSamples());
+  }
+  const auto attack =
+    apvts.getRawParameterValue("ATTACK")->load();
 
+  const auto decay =
+      apvts.getRawParameterValue("DECAY")->load();
 
-  sintetizador.process(buffer, midiMessages) ;
+  const auto sustain =
+      apvts.getRawParameterValue("SUSTAIN")->load();
 
+  const auto release =
+      apvts.getRawParameterValue("RELEASE")->load();
+
+  for (int i = 0; i < synth.getNumVoices(); ++i)
+  {
+    if (auto* voice =
+        dynamic_cast<MiniMoogVoice*>(synth.getVoice(i)))
+    {
+      voice->setEnvelopeParameters(attack,
+                                   decay,
+                                   sustain,
+                                   release);
+    }
+  }
+
+  synth.renderNextBlock(buffer, midi, 0, buffer.getNumSamples());
 }
 
-bool PluginProcessor::hasEditor() const {
-  return true;  // (change this to false if you choose to not supply an editor)
-}
+bool PluginProcessor::hasEditor() const { return true; }
 
-juce::AudioProcessorEditor* PluginProcessor::createEditor() {
-  // return new PluginEditor(*this);
+juce::AudioProcessorEditor* PluginProcessor::createEditor()
+{
   return new juce::GenericAudioProcessorEditor(*this);
 }
 
-void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
-  // You should use this method to store your parameters in the memory block.
-  // You could do that either as raw data, or use the XML or ValueTree classes
-  // as intermediaries to make it easy to save and load complex data.
-  juce::ignoreUnused(destData);
+juce::AudioProcessorValueTreeState::ParameterLayout
+
+PluginProcessor::createParameters()
+{
+  std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
+
+  parameters.push_back(
+      std::make_unique<juce::AudioParameterFloat>(
+          "ATTACK",
+          "Attack",
+          0.01f,
+          5.f,
+          0.1f));
+
+  parameters.push_back(
+      std::make_unique<juce::AudioParameterFloat>(
+          "DECAY",
+          "Decay",
+          0.01f,
+          5.f,
+          0.2f));
+
+  parameters.push_back(
+      std::make_unique<juce::AudioParameterFloat>(
+          "SUSTAIN",
+          "Sustain",
+          0.f,
+          1.f,
+          0.8f));
+
+  parameters.push_back(
+      std::make_unique<juce::AudioParameterFloat>(
+          "RELEASE",
+          "Release",
+          0.01f,
+          5.f,
+          0.4f));
+
+  return { parameters.begin(), parameters.end() };
 }
 
-void PluginProcessor::setStateInformation(const void* data, int sizeInBytes) {
-  // You should use this method to restore your parameters from this memory
-  // block, whose contents will have been created by the getStateInformation()
-  // call.
-  juce::ignoreUnused(data, sizeInBytes);
 }
-}  // namespace audio_plugin
 
-// This creates new instances of the plugin.
-// This function definition must be in the global namespace.
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {
+
+
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+{
   return new sintetizador_monofonico::PluginProcessor();
 }

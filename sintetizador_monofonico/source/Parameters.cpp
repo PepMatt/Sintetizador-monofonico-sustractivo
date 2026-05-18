@@ -72,8 +72,8 @@ namespace
         auto param = std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"amp.gain", versionHint},
             "Gain",
-            juce::NormalisableRange{-60.f, 12.f, 0.1f,1.f},
-            0.f,
+            juce::NormalisableRange{-60.f, 0.0f, 0.1f,1.f},
+            -10.f,
             juce::AudioParameterFloatAttributes{}.withLabel("dB"));
 
         return addParameter(processor, std::move(param));
@@ -106,10 +106,10 @@ Parameters::Parameters(juce::AudioProcessor& processor)
       stereoSpread{createStereoSpread(processor)},
       gainDB{createGain(processor)},
 
-      attack{createADSR(processor, "env.attack", "Attack", 0.01f, 0.001f, 5.f)},
-      decay{createADSR(processor, "env.decay", "Decay", 0.2f, 0.001f, 5.f)},
+      attack{createADSR(processor, "env.attack", "Attack", 0.01f, 0.001f, 20.f)},
+      decay{createADSR(processor, "env.decay", "Decay", 0.2f, 0.001f, 10.f)},
       sustain{createADSR(processor, "env.sustain", "Sustain", 0.8f, 0.f, 1.f)},
-      release{createADSR(processor, "env.release", "Release", 0.3f, 0.001f, 5.f)}
+      release{createADSR(processor, "env.release", "Release", 0.3f, 0.001f, 20.f)}
 {
 }
 

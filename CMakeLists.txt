@@ -125,7 +125,10 @@ target_compile_definitions(AudioPlugin PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=
 # This is unlikely on small projects, but we want to use the best practices from the start
 # (and migrating to JUCE modules at a late development stage is a nightmare, trust me).
 juce_add_module(sintetizador_monofonico ALIAS_NAMESPACE my_company)
-
+#thats lines add the /include folder to the path
+target_include_directories(sintetizador_monofonico INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/sintetizador_monofonico/include
+)
 # In the following, we re-export some of the compile-time definitions derived from arguments of
 # juce_add_plugin(). This is necessary to maintain consistent behavior in built plugins and in tests.
 # Check juce/extras/Build/CMake/JUCEUtils.cmake to see how they are defined for the AudioPlugin target.
