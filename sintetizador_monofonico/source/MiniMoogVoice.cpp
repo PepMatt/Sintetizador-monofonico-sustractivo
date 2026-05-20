@@ -106,16 +106,16 @@ void MiniMoogVoice::setFilterParameters(float cutoff,
 {
   sintetizador.setFilterParameters(cutoff, resonance, drive, mode);
 }
-void MiniMoogVoice::setGlide(float glideTimeSeconds)
+void MiniMoogVoice::setGlide(float glideTime)
 {
-  if (currentGlideTime == glideTimeSeconds)
+  if (juce::approximatelyEqual(currentGlideTime, glideTime))
     return;
 
-  currentGlideTime = glideTimeSeconds;
+  currentGlideTime = glideTime;
 
   smoothedFrequency.reset(
       getSampleRate(),
-      glideTimeSeconds
+      glideTime
   );
 }
 } // namespace sintetizador_monofonico

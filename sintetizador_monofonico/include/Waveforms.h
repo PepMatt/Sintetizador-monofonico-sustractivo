@@ -61,7 +61,10 @@ private:
   static float sine(float phase);
   static float triangle(float phase);
   static float saw(float phase);
+  static float reverseSaw(float phase);
   static float square(float phase);
+  static float widePulse(float phase);
+  static float narrowPulse(float phase);
 };
 
 } // namespace sintetizador_monofonico
