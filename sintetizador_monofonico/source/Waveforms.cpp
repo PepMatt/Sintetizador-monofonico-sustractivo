@@ -189,9 +189,33 @@ float Waveforms::saw(float phase)
     return 2.f * (normalized - std::floor(normalized + 0.5f));
 }
 
+float Waveforms::reverseSaw(float phase)
+{
+  const auto normalized =
+      phase / juce::MathConstants<float>::twoPi;
+
+  return -2.f * (normalized - std::floor(normalized + 0.5f));
+}
+
 float Waveforms::square(float phase)
 {
     return std::sin(phase) >= 0.f ? 1.f : -1.f;
+}
+
+float Waveforms::widePulse(float phase)
+{
+  const auto normalized =
+      phase / juce::MathConstants<float>::twoPi;
+
+  return normalized < 0.75f ? 1.f : -1.f;
+}
+
+float Waveforms::narrowPulse(float phase)
+{
+  const auto normalized =
+      phase / juce::MathConstants<float>::twoPi;
+
+  return normalized < 0.25f ? 1.f : -1.f;
 }
 
 } // namespace sintetizador_monofonico
