@@ -125,7 +125,10 @@ private:
   juce::Label osc3Label;
 
   juce::Label osc1OctLabel;
-
+  // =========================================
+  // LOGO
+  // =========================================
+  juce::Image logoImage;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
 };

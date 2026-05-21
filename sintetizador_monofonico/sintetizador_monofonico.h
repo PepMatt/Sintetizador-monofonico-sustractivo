@@ -39,6 +39,7 @@ END_JUCE_MODULE_DECLARATION
 
 
 
+
 #include "include/Waveforms.h"
 #include "include/Parameters.h"
 #include "include/Envelope.h"

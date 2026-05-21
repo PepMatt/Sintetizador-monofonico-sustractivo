@@ -1,5 +1,5 @@
 #include "PluginEditor.h"
-
+#include "BinaryData.h"
 namespace sintetizador_monofonico {
 
 PluginEditor::PluginEditor(PluginProcessor& p)
@@ -30,8 +30,19 @@ PluginEditor::PluginEditor(PluginProcessor& p)
 
       glideAttachment(p.apvts, "GLIDE", glide),
       gainAttachment(p.apvts, "MASTER_GAIN", gain)
+
+
+
 {
+  logoImage = juce::ImageCache::getFromMemory(
+      BinaryData::DAMVJP_png,
+      BinaryData::DAMVJP_pngSize
+  );
+
     setSize(1280, 620);
+
+
+
 
     // =========================================
     // KNOBS
@@ -184,22 +195,41 @@ void PluginEditor::setupLabel(juce::Label& label,
 // =========================================
 void PluginEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colour(20, 20, 20));
+  g.fillAll(juce::Colour(20, 20, 20));
 
-    g.setColour(juce::Colours::pink);
+  g.setColour(juce::Colours::pink);
 
-    g.setFont(32.f);
+  g.setFont(32.f);
 
-    g.drawFittedText(
-        "MINIMOOG STYLE SYNTH",
+  g.drawFittedText(
+      "MINIMOOG STYLE SYNTH",
+      0,
+      10,
+      getWidth(),
+      40,
+      juce::Justification::centred,
+      1);
+
+  // =========================================
+  // LOGO
+  // =========================================
+  if (!logoImage.isNull())
+  {
+    g.drawImage(
+        logoImage,
+
+        getWidth() - 320,
+        getHeight() - 440,
+
+        300,
+        300,
+
         0,
-        10,
-        getWidth(),
-        40,
-        juce::Justification::centred,
-        1);
+        0,
+        logoImage.getWidth(),
+        logoImage.getHeight());
+  }
 }
-
 // =========================================
 // RESIZED
 // =========================================
@@ -313,6 +343,7 @@ void PluginEditor::resized()
 
     gain.setBounds(gainArea.removeFromTop(knobSize));
     gainLabel.setBounds(gainArea.removeFromTop(labelHeight));
+
 }
 
 } // namespace sintetizador_monofonico

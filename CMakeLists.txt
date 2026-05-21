@@ -124,6 +124,12 @@ target_compile_definitions(AudioPlugin PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=
 # not as static or shared libraries. Otherwise, you risk buggy JUCE build configuration.
 # This is unlikely on small projects, but we want to use the best practices from the start
 # (and migrating to JUCE modules at a late development stage is a nightmare, trust me).
+juce_add_binary_data(Assets
+        SOURCES
+        assets/DAM-VJP.png
+)
+
+
 juce_add_module(sintetizador_monofonico ALIAS_NAMESPACE my_company)
 #thats lines add the /include folder to the path
 target_include_directories(sintetizador_monofonico INTERFACE
@@ -157,6 +163,7 @@ target_link_libraries(
         my_company::sintetizador_monofonico
         juce::juce_audio_processors
         juce::juce_dsp
+        Assets
         PUBLIC juce::juce_recommended_config_flags juce::juce_recommended_lto_flags juce::juce_recommended_warning_flags
 )
 
