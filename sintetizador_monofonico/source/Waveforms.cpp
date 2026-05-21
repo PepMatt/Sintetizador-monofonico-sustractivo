@@ -85,6 +85,17 @@ void Waveforms::rebuildOscillator(
         case WaveformType::square:
             osc.initialise(square);
             break;
+      case WaveformType::reverseSaw:
+        osc.initialise(reverseSaw);
+        break;
+
+      case WaveformType::widePulse:
+        osc.initialise(widePulse);
+        break;
+
+      case WaveformType::narrowPulse:
+        osc.initialise(narrowPulse);
+        break;
     }
 }
 
@@ -205,7 +216,8 @@ float Waveforms::square(float phase)
 float Waveforms::widePulse(float phase)
 {
   const auto normalized =
-      phase / juce::MathConstants<float>::twoPi;
+      (phase + juce::MathConstants<float>::pi)
+      / juce::MathConstants<float>::twoPi;
 
   return normalized < 0.75f ? 1.f : -1.f;
 }
@@ -213,7 +225,8 @@ float Waveforms::widePulse(float phase)
 float Waveforms::narrowPulse(float phase)
 {
   const auto normalized =
-      phase / juce::MathConstants<float>::twoPi;
+      (phase + juce::MathConstants<float>::pi)
+      / juce::MathConstants<float>::twoPi;
 
   return normalized < 0.25f ? 1.f : -1.f;
 }

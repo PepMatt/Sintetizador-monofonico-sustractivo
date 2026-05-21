@@ -5,6 +5,15 @@ namespace sintetizador_monofonico {
 juce::AudioProcessorValueTreeState::ParameterLayout
 ParameterLayoutBuilder::create()
 {
+  const juce::StringArray oscilatorsSet{
+    "Sine",
+    "Triangle",
+    "Saw",
+    "Reverse Saw",
+    "Square",
+    "Wide Pulse",
+    "Narrow Pulse"
+  };
   std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
   parameters.push_back(
     std::make_unique<juce::AudioParameterFloat>(
@@ -81,21 +90,21 @@ parameters.push_back(
       std::make_unique<juce::AudioParameterChoice>(
           "OSC1_WAVE",
           "Osc1 Wave",
-          juce::StringArray{"Sine", "Triangle", "Saw", "Square"},
+          oscilatorsSet,
           2));
 
   parameters.push_back(
       std::make_unique<juce::AudioParameterChoice>(
           "OSC2_WAVE",
           "Osc2 Wave",
-          juce::StringArray{"Sine", "Triangle", "Saw", "Square"},
+          oscilatorsSet,
           2));
 
   parameters.push_back(
       std::make_unique<juce::AudioParameterChoice>(
           "OSC3_WAVE",
           "Osc3 Wave",
-          juce::StringArray{"Sine", "Triangle", "Saw", "Square"},
+          oscilatorsSet,
           2));
 
   parameters.push_back(
@@ -152,5 +161,6 @@ parameters.push_back(
           0.4f));
   return { parameters.begin(), parameters.end() };
 }
+
 
 }

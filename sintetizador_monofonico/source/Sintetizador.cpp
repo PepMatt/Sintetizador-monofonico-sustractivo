@@ -108,4 +108,5 @@ void Sintetizador::setFilterParameters(float cutoff,
   filter.setDrive(drive);
   filter.setMode((LadderFilter::FilterMode)mode);
 }
+
 } // namespace sintetizador_monofonico

@@ -6,11 +6,15 @@ namespace sintetizador_monofonico {
 class Waveforms {
 public:
 
-  enum class WaveformType {
+  enum class WaveformType
+  {
     sine,
     triangle,
     saw,
-    square
+    reverseSaw,
+    square,
+    widePulse,
+    narrowPulse
 };
 
   void prepare(double sampleRate, int samplesPerBlock);
