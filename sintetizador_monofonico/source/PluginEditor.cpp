@@ -38,7 +38,11 @@ PluginEditor::PluginEditor(PluginProcessor& p)
       BinaryData::DAMVJP_png,
       BinaryData::DAMVJP_pngSize
   );
+    addAndMakeVisible(saveButton);
+    addAndMakeVisible(loadButton);
 
+    saveButton.onClick = [this] { savePreset(); };
+    loadButton.onClick = [this] { loadPreset(); };
     setSize(1280, 620);
 
 
@@ -128,7 +132,74 @@ PluginEditor::PluginEditor(PluginProcessor& p)
     setupLabel(releaseLabel, "RELEASE");
     setupLabel(gainLabel, "GAIN");
 }
+// =========================================
+// LOAD/SAVE
+// =========================================
+void PluginEditor::loadPreset()
+{
+  fileChooser = std::make_unique<juce::FileChooser>(
+      "Load preset",
+      juce::File::getSpecialLocation(juce::File::userDocumentsDirectory),
+      "*.json"
+  );
 
+  fileChooser->launchAsync(
+      juce::FileBrowserComponent::openMode,
+      [this](const juce::FileChooser& fc)
+      {
+          auto file = fc.getResult();
+
+          if (!file.existsAsFile())
+            return;
+
+        juce::FileInputStream stream(file);
+
+        if (stream.openedOk())
+        {
+            juce::ValueTree state;
+
+            auto result = JsonSerializer::loadFromStream(state, stream);
+
+            if (result.wasOk())
+              processorRef.apvts.replaceState(state);
+      }
+
+      fileChooser.reset(); // 👈 importante liberar al final
+  }
+);
+}
+void PluginEditor::savePreset()
+{
+  fileChooser = std::make_unique<juce::FileChooser>(
+      "Save preset",
+      juce::File::getSpecialLocation(juce::File::userDocumentsDirectory),
+      "*.json"
+  );
+
+  fileChooser->launchAsync(
+      juce::FileBrowserComponent::saveMode,
+      [this](const juce::FileChooser& fc)
+      {
+          auto file = fc.getResult();
+
+          if (!file.hasFileExtension("json"))
+            file = file.withFileExtension("json");
+
+        if (file == juce::File{})
+          return;
+
+      juce::FileOutputStream stream(file);
+
+      if (stream.openedOk())
+      {
+          auto state = processorRef.apvts.copyState();
+          JsonSerializer::saveToStream(state, stream);
+      }
+
+      fileChooser.reset(); // 👈 importante
+  }
+);
+}
 // =========================================
 // SETUP KNOB
 // =========================================
@@ -238,6 +309,7 @@ void PluginEditor::resized()
     auto bounds = getLocalBounds().reduced(20);
 
     bounds.removeFromTop(55);
+    auto bottomBar = bounds.removeFromBottom(50);
 
     constexpr int knobSize = 90;
     constexpr int labelHeight = 20;
@@ -344,6 +416,14 @@ void PluginEditor::resized()
     gain.setBounds(gainArea.removeFromTop(knobSize));
     gainLabel.setBounds(gainArea.removeFromTop(labelHeight));
 
+  const int buttonWidth = 120;
+  const int buttonHeight = 30;
+
+  auto saveArea = bottomBar.removeFromRight(buttonWidth);
+  auto loadArea = bottomBar.removeFromRight(buttonWidth);
+
+  saveButton.setBounds(saveArea.reduced(5).withSizeKeepingCentre(buttonWidth, buttonHeight));
+  loadButton.setBounds(loadArea.reduced(5).withSizeKeepingCentre(buttonWidth, buttonHeight));
 }
 
 } // namespace sintetizador_monofonico

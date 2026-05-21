@@ -75,47 +75,63 @@ void MiniMoogVoice::renderNextBlock(juce::AudioBuffer<float>& buffer,
   if (!sintetizador.isActive())
     clearCurrentNote();
 }
-void MiniMoogVoice::setEnvelopeParameters(float attack,
-                                          float decay,
-                                          float sustain,
-                                          float release)
-{
-  sintetizador.setEnvelopeParameters(attack,
-                                     decay,
-                                     sustain,
-                                     release);
-}
-void MiniMoogVoice::setOscParameters(int osc1Wave,
-                                     int osc2Wave,
-                                     int osc3Wave,
-                                     int osc1Oct,
-                                     int osc2Oct,
-                                     int osc3Oct,
-                                     float osc2Detune,
-                                     float osc3Detune)
-{
-  sintetizador.setOscParameters(
-      osc1Wave, osc2Wave, osc3Wave,
-      osc1Oct, osc2Oct, osc3Oct,
-      osc2Detune, osc3Detune);
-}
-void MiniMoogVoice::setFilterParameters(float cutoff,
-                                        float resonance,
-                                        float drive,
-                                        int mode)
-{
-  sintetizador.setFilterParameters(cutoff, resonance, drive, mode);
-}
-void MiniMoogVoice::setGlide(float glideTime)
-{
-  if (juce::approximatelyEqual(currentGlideTime, glideTime))
-    return;
+// void MiniMoogVoice::setEnvelopeParameters(float attack,
+//                                           float decay,
+//                                           float sustain,
+//                                           float release)
+// {
+//   sintetizador.setEnvelopeParameters(attack,
+//                                      decay,
+//                                      sustain,
+//                                      release);
+// }
+// void MiniMoogVoice::setOscParameters(int osc1Wave,
+//                                      int osc2Wave,
+//                                      int osc3Wave,
+//                                      int osc1Oct,
+//                                      int osc2Oct,
+//                                      int osc3Oct,
+//                                      float osc2Detune,
+//                                      float osc3Detune)
+// {
+//   sintetizador.setOscParameters(
+//       osc1Wave, osc2Wave, osc3Wave,
+//       osc1Oct, osc2Oct, osc3Oct,
+//       osc2Detune, osc3Detune);
+// }
+// void MiniMoogVoice::setFilterParameters(float cutoff,
+//                                         float resonance,
+//                                         float drive,
+//                                         int mode)
+// {
+//   sintetizador.setFilterParameters(cutoff, resonance, drive, mode);
+// }
+// void MiniMoogVoice::setGlide(float glideTime)
+// {
+//   if (juce::approximatelyEqual(currentGlideTime, glideTime))
+//     return;
+//
+//   currentGlideTime = glideTime;
+//
+//   smoothedFrequency.reset(
+//       getSampleRate(),
+//       glideTime
+//   );
 
-  currentGlideTime = glideTime;
+void MiniMoogVoice::setParameters(
+    const SynthParameters& params)
+{
+  sintetizador.setParameters(params);
 
-  smoothedFrequency.reset(
-      getSampleRate(),
-      glideTime
-  );
+  if (!juce::approximatelyEqual(
+          currentGlideTime,
+          params.glide))
+  {
+    currentGlideTime = params.glide;
+
+    smoothedFrequency.reset(
+        getSampleRate(),
+        currentGlideTime);
+  }
 }
-} // namespace sintetizador_monofonico
+}

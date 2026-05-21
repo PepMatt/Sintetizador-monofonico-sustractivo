@@ -68,45 +68,72 @@ bool Sintetizador::isActive() const
 {
   return ampEnvelope.isActive();
 }
-void Sintetizador::setEnvelopeParameters(float attack,
-                                         float decay,
-                                         float sustain,
-                                         float release)
+// void Sintetizador::setEnvelopeParameters(float attack,
+//                                          float decay,
+//                                          float sustain,
+//                                          float release)
+// {
+//   ampEnvelope.setParameters(attack,
+//                             decay,
+//                             sustain,
+//                             release);
+// }
+// void Sintetizador::setOscParameters(int osc1Wave,
+//                                    int osc2Wave,
+//                                    int osc3Wave,
+//                                    int osc1Oct,
+//                                    int osc2Oct,
+//                                    int osc3Oct,
+//                                    float osc2Detune,
+//                                    float osc3Detune)
+// {
+//   waveforms.setOsc1Waveform((Waveforms::WaveformType)osc1Wave);
+//   waveforms.setOsc2Waveform((Waveforms::WaveformType)osc2Wave);
+//   waveforms.setOsc3Waveform((Waveforms::WaveformType)osc3Wave);
+//
+//   waveforms.setOsc1Octave(osc1Oct);
+//   waveforms.setOsc2Octave(osc2Oct);
+//   waveforms.setOsc3Octave(osc3Oct);
+//
+//   waveforms.setOsc2Detune(osc2Detune);
+//   waveforms.setOsc3Detune(osc3Detune);
+// }
+// void Sintetizador::setFilterParameters(float cutoff,
+//                                        float resonance,
+//                                        float drive,
+//                                        int mode)
+// {
+//   filter.setCutoff(cutoff);
+//   filter.setResonance(resonance);
+//   filter.setDrive(drive);
+//   filter.setMode((LadderFilter::FilterMode)mode);
+// }
+void Sintetizador::setParameters(
+    const SynthParameters& params)
 {
-  ampEnvelope.setParameters(attack,
-                            decay,
-                            sustain,
-                            release);
-}
-void Sintetizador::setOscParameters(int osc1Wave,
-                                   int osc2Wave,
-                                   int osc3Wave,
-                                   int osc1Oct,
-                                   int osc2Oct,
-                                   int osc3Oct,
-                                   float osc2Detune,
-                                   float osc3Detune)
-{
-  waveforms.setOsc1Waveform((Waveforms::WaveformType)osc1Wave);
-  waveforms.setOsc2Waveform((Waveforms::WaveformType)osc2Wave);
-  waveforms.setOsc3Waveform((Waveforms::WaveformType)osc3Wave);
+  // =========================================
+  // OSC
+  // =========================================
+  waveforms.setParameters(params);
 
-  waveforms.setOsc1Octave(osc1Oct);
-  waveforms.setOsc2Octave(osc2Oct);
-  waveforms.setOsc3Octave(osc3Oct);
+  // =========================================
+  // FILTER
+  // =========================================
+  filter.setCutoff(params.cutoff);
+  filter.setResonance(params.resonance);
+  filter.setDrive(params.drive);
 
-  waveforms.setOsc2Detune(osc2Detune);
-  waveforms.setOsc3Detune(osc3Detune);
-}
-void Sintetizador::setFilterParameters(float cutoff,
-                                       float resonance,
-                                       float drive,
-                                       int mode)
-{
-  filter.setCutoff(cutoff);
-  filter.setResonance(resonance);
-  filter.setDrive(drive);
-  filter.setMode((LadderFilter::FilterMode)mode);
-}
+  filter.setMode(
+      static_cast<LadderFilter::FilterMode>(
+          params.filterMode));
 
-} // namespace sintetizador_monofonico
+  // =========================================
+  // ENVELOPE
+  // =========================================
+  ampEnvelope.setParameters(
+      params.attack,
+      params.decay,
+      params.sustain,
+      params.release);
+}
+}

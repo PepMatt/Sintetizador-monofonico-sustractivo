@@ -124,55 +124,108 @@ void Waveforms::updateFrequencies()
 
 // =========================================
 // SETTERS
-// =========================================
-void Waveforms::setOsc1Waveform(WaveformType w)
+// // =========================================
+// void Waveforms::setOsc1Waveform(WaveformType w)
+// {
+//     osc1Waveform = w;
+//     rebuildOscillator(osc1, w);
+// }
+//
+// void Waveforms::setOsc2Waveform(WaveformType w)
+// {
+//     osc2Waveform = w;
+//     rebuildOscillator(osc2, w);
+// }
+//
+// void Waveforms::setOsc3Waveform(WaveformType w)
+// {
+//     osc3Waveform = w;
+//     rebuildOscillator(osc3, w);
+// }
+//
+// void Waveforms::setOsc2Detune(float v)
+// {
+//     osc2Detune = v;
+//     updateFrequencies();
+// }
+//
+// void Waveforms::setOsc3Detune(float v)
+// {
+//     osc3Detune = v;
+//     updateFrequencies();
+// }
+//
+// void Waveforms::setOsc1Octave(int v)
+// {
+//     osc1Octave = v;
+//     updateFrequencies();
+// }
+//
+// void Waveforms::setOsc2Octave(int v)
+// {
+//     osc2Octave = v;
+//     updateFrequencies();
+// }
+//
+// void Waveforms::setOsc3Octave(int v)
+// {
+//     osc3Octave = v;
+//     updateFrequencies();
+// }
+void Waveforms::setParameters(
+    const SynthParameters& params)
 {
-    osc1Waveform = w;
-    rebuildOscillator(osc1, w);
-}
+  // =========================================
+  // WAVEFORMS
+  // =========================================
+  if (osc1Waveform !=
+      static_cast<WaveformType>(params.osc1Wave))
+  {
+    osc1Waveform =
+        static_cast<WaveformType>(params.osc1Wave);
 
-void Waveforms::setOsc2Waveform(WaveformType w)
-{
-    osc2Waveform = w;
-    rebuildOscillator(osc2, w);
-}
+    rebuildOscillator(
+        osc1,
+        osc1Waveform);
+  }
 
-void Waveforms::setOsc3Waveform(WaveformType w)
-{
-    osc3Waveform = w;
-    rebuildOscillator(osc3, w);
-}
+  if (osc2Waveform !=
+      static_cast<WaveformType>(params.osc2Wave))
+  {
+    osc2Waveform =
+        static_cast<WaveformType>(params.osc2Wave);
 
-void Waveforms::setOsc2Detune(float v)
-{
-    osc2Detune = v;
-    updateFrequencies();
-}
+    rebuildOscillator(
+        osc2,
+        osc2Waveform);
+  }
 
-void Waveforms::setOsc3Detune(float v)
-{
-    osc3Detune = v;
-    updateFrequencies();
-}
+  if (osc3Waveform !=
+      static_cast<WaveformType>(params.osc3Wave))
+  {
+    osc3Waveform =
+        static_cast<WaveformType>(params.osc3Wave);
 
-void Waveforms::setOsc1Octave(int v)
-{
-    osc1Octave = v;
-    updateFrequencies();
-}
+    rebuildOscillator(
+        osc3,
+        osc3Waveform);
+  }
 
-void Waveforms::setOsc2Octave(int v)
-{
-    osc2Octave = v;
-    updateFrequencies();
-}
+  // =========================================
+  // OCTAVES
+  // =========================================
+  osc1Octave = params.osc1Oct;
+  osc2Octave = params.osc2Oct;
+  osc3Octave = params.osc3Oct;
 
-void Waveforms::setOsc3Octave(int v)
-{
-    osc3Octave = v;
-    updateFrequencies();
-}
+  // =========================================
+  // DETUNE
+  // =========================================
+  osc2Detune = params.osc2Detune;
+  osc3Detune = params.osc3Detune;
 
+  updateFrequencies();
+}
 // =========================================
 // WAVEFORMS
 // =========================================

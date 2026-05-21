@@ -7,6 +7,7 @@
 #include  "source/MiniMoogVoice.cpp"
 #include "source/Sintetizador.cpp"
 #include "source/ParameterLayoutBuilder.cpp"
+#include "source/JsonSerializer.cpp"
 
 
 // #include all additional .cpp files below

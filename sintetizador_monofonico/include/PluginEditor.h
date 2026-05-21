@@ -14,7 +14,15 @@ private:
 
   using ComboAttachment =
       juce::AudioProcessorValueTreeState::ComboBoxAttachment;
-
+  // =========================================
+  // FILE CHOOSER
+  // =========================================
+  std::unique_ptr<juce::FileChooser> fileChooser;
+  // =========================================
+  // LOAD/SAVE
+  // =========================================
+  void savePreset();
+  void loadPreset();
   // =========================================
   // HELPERS
   // =========================================
@@ -70,6 +78,12 @@ private:
   // =========================================
   // LABELS
   // =========================================
+  juce::Label osc1Label;
+  juce::Label osc2Label;
+  juce::Label osc3Label;
+
+  juce::Label osc1OctLabel;
+
   juce::Label osc2WaveLabel;
   juce::Label osc2OctLabel;
   juce::Label osc2DetuneLabel;
@@ -119,12 +133,13 @@ private:
 
   SliderAttachment glideAttachment;
   SliderAttachment gainAttachment;
+  // =========================================
+  // BUTTONS
+  // =========================================
+  juce::TextButton saveButton { "Save" };
+  juce::TextButton loadButton { "Load" };
 
-  juce::Label osc1Label;
-  juce::Label osc2Label;
-  juce::Label osc3Label;
 
-  juce::Label osc1OctLabel;
   // =========================================
   // LOGO
   // =========================================

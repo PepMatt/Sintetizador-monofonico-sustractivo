@@ -42,9 +42,9 @@ public:
 
   void changeProgramName(int, const juce::String&) override {}
 
-  void getStateInformation(juce::MemoryBlock&) override {}
+  void getStateInformation(juce::MemoryBlock&) override;
 
-  void setStateInformation(const void*, int) override {}
+  void setStateInformation(const void*, int) override;
 private:
 
   juce::Synthesiser synth;

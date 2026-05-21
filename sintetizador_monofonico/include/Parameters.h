@@ -1,11 +1,13 @@
 #pragma once
-
+#include "SynthParameters.h"
 namespace sintetizador_monofonico {
 
 struct Parameters
 {
   explicit Parameters(
       juce::AudioProcessorValueTreeState& apvts);
+
+  SynthParameters get() const;
 
   // =========================================
   // FILTER

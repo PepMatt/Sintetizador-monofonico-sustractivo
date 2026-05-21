@@ -1,5 +1,7 @@
 #pragma once
 #include <juce_dsp/juce_dsp.h>
+#include "SynthParameters.h"
+
 
 namespace sintetizador_monofonico {
 
@@ -26,16 +28,7 @@ public:
 
   void setFrequency(float frequency);
 
-  void setOsc1Waveform(WaveformType waveform);
-  void setOsc2Waveform(WaveformType waveform);
-  void setOsc3Waveform(WaveformType waveform);
-
-  void setOsc2Detune(float semitones);
-  void setOsc3Detune(float semitones);
-
-  void setOsc1Octave(int octave);
-  void setOsc2Octave(int octave);
-  void setOsc3Octave(int octave);
+  void setParameters(const SynthParameters& params);
 
 private:
 

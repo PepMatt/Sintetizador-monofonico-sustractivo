@@ -49,7 +49,9 @@ END_JUCE_MODULE_DECLARATION
 
 
 #include "include/Sintetizador.h"
-
+#include "include/JsonSerializer.h"
+#include "include/SynthParameters.h"
+#include  "include/SynthParameters.h"
 #include "include/MiniMoogSound.h"
 #include "include/MiniMoogVoice.h"
 

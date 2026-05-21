@@ -3,6 +3,7 @@
 
 #include "Sintetizador.h"
 #include "MiniMoogSound.h"
+#include "SynthParameters.h"
 
 namespace sintetizador_monofonico {
 
@@ -28,23 +29,24 @@ public:
                        int startSample,
                        int numSamples) override;
 
-  void setEnvelopeParameters(float attack,
-                             float decay,
-                             float sustain,
-                             float release);
-  void setOscParameters(int osc1Wave,
-                        int osc2Wave,
-                        int osc3Wave,
-                        int osc1Oct,
-                        int osc2Oct,
-                        int osc3Oct,
-                        float osc2Detune,
-                        float osc3Detune);
-  void setFilterParameters(float cutoff,
-                         float resonance,
-                         float drive,
-                         int mode);
-  void setGlide(float v);
+  // void setEnvelopeParameters(float attack,
+  //                            float decay,
+  //                            float sustain,
+  //                            float release);
+  // void setOscParameters(int osc1Wave,
+  //                       int osc2Wave,
+  //                       int osc3Wave,
+  //                       int osc1Oct,
+  //                       int osc2Oct,
+  //                       int osc3Oct,
+  //                       float osc2Detune,
+  //                       float osc3Detune);
+  // void setFilterParameters(float cutoff,
+  //                        float resonance,
+  //                        float drive,
+  //                        int mode);
+  // void setGlide(float v);
+  void setParameters(const SynthParameters& params);
 private:
 
   juce::SmoothedValue<float> smoothedFrequency;

@@ -33,7 +33,6 @@ void PluginProcessor::prepareToPlay(double sampleRate,
 void PluginProcessor::releaseResources()
 {
 }
-
 void PluginProcessor::processBlock(
     juce::AudioBuffer<float>& buffer,
     juce::MidiBuffer& midi)
@@ -46,75 +45,38 @@ void PluginProcessor::processBlock(
     buffer.clear(ch, 0, buffer.getNumSamples());
   }
 
-  const auto gainDB =
-    parameters.masterGain->load();
+  // =========================================
+  // LEER TODOS LOS PARÁMETROS
+  // =========================================
+  const auto params = parameters.get();
 
-  const auto glide =
-    parameters.glide->load();
-
-
-  const auto cutoff  = parameters.filterCutoff->load();
-  const auto res     = parameters.filterResonance->load();
-  const auto drive =
-    36.f - parameters.filterDrive->load();
-  const auto mode    = parameters.filterMode->load();
-
-  const auto osc2Detune = parameters.osc2Detune->load();
-  const auto osc3Detune = parameters.osc3Detune->load();
-
-  const auto osc1Wave = parameters.osc1Wave->load();
-  const auto osc2Wave = parameters.osc2Wave->load();
-  const auto osc3Wave = parameters.osc3Wave->load();
-
-  const auto osc1Oct = parameters.osc1Oct->load();
-  const auto osc2Oct = parameters.osc2Oct->load();
-  const auto osc3Oct = parameters.osc3Oct->load();
-
-  const auto attack  = parameters.attack->load();
-  const auto decay   = parameters.decay->load();
-  const auto sustain = parameters.sustain->load();
-  const auto release = parameters.release->load();
-
+  // =========================================
+  // ENVIAR PARÁMETROS A LAS VOCES
+  // =========================================
   for (int i = 0; i < synth.getNumVoices(); ++i)
   {
     if (auto* voice =
         dynamic_cast<MiniMoogVoice*>(synth.getVoice(i)))
     {
-      voice->setOscParameters(
-          osc1Wave,
-          osc2Wave,
-          osc3Wave,
-          osc1Oct,
-          osc2Oct,
-          osc3Oct,
-          osc2Detune,
-          osc3Detune);
-
-      voice->setFilterParameters(
-          cutoff,
-          res,
-          drive,
-          mode);
-
-      voice->setEnvelopeParameters(
-          attack,
-          decay,
-          sustain,
-          release);
-    voice->setGlide(glide);
-
+      voice->setParameters(params);
     }
   }
 
+  // =========================================
+  // RENDER
+  // =========================================
   synth.renderNextBlock(
       buffer,
       midi,
       0,
       buffer.getNumSamples());
-  buffer.applyGain(
-    juce::Decibels::decibelsToGain(gainDB));
-}
 
+  // =========================================
+  // MASTER GAIN
+  // =========================================
+  buffer.applyGain(
+      juce::Decibels::decibelsToGain(params.gain));
+}
 bool PluginProcessor::hasEditor() const
 {
   return true;
@@ -127,6 +89,28 @@ PluginProcessor::createEditor()
   return new PluginEditor(*this);
 }
 
+void PluginProcessor::getStateInformation(juce::MemoryBlock& destData)
+{
+  auto state = apvts.copyState();
+
+  juce::MemoryOutputStream stream(destData, false);
+
+  JsonSerializer::saveToStream(state, stream);
+}
+
+void PluginProcessor::setStateInformation(const void* data, int sizeInBytes)
+{
+  juce::MemoryInputStream stream(data, static_cast<size_t>(sizeInBytes), false);
+
+  juce::ValueTree state;
+
+  auto result = JsonSerializer::loadFromStream(state, stream);
+
+  if (result.failed())
+    return;
+
+  apvts.replaceState(state);
+}
 } // namespace sintetizador_monofonico
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()

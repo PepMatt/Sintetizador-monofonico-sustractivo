@@ -4,12 +4,14 @@
 #include "LadderFilter.h"
 #include "OscMixer.h"
 #include "Waveforms.h"
+#include "SynthParameters.h"
 
 namespace sintetizador_monofonico {
 
 class Sintetizador {
 public:
-
+  void setParameters(
+      const SynthParameters& params);
   void prepare(double sampleRate, int samplesPerBlock);
   void reset();
 
@@ -21,23 +23,23 @@ public:
   float processSample(float frequency);
 
   bool isActive() const;
-
-  void setEnvelopeParameters(float attack,
-                           float decay,
-                           float sustain,
-                           float release);
-  void setOscParameters(int osc1Wave,
-                        int osc2Wave,
-                        int osc3Wave,
-                        int osc1Oct,
-                        int osc2Oct,
-                        int osc3Oct,
-                        float osc2Detune,
-                        float osc3Detune);
-  void setFilterParameters(float cutoff,
-                         float resonance,
-                         float drive,
-                         int mode);
+  //
+  // void setEnvelopeParameters(float attack,
+  //                          float decay,
+  //                          float sustain,
+  //                          float release);
+  // void setOscParameters(int osc1Wave,
+  //                       int osc2Wave,
+  //                       int osc3Wave,
+  //                       int osc1Oct,
+  //                       int osc2Oct,
+  //                       int osc3Oct,
+  //                       float osc2Detune,
+  //                       float osc3Detune);
+  // void setFilterParameters(float cutoff,
+  //                        float resonance,
+  //                        float drive,
+  //                        int mode);
 
 private:
 
